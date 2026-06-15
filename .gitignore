@@ -37,6 +37,8 @@ captures/
 # Keystore files
 *.jks
 *.keystore
+# ...except the committed demo release keystore used by CI / out-of-the-box builds
+!app/roadrash-release.jks
 
 # OS files
 .DS_Store

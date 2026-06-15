@@ -70,6 +70,34 @@ command line:
 - Requires the Android SDK (set `sdk.dir` in `local.properties`, or let Android
   Studio configure it automatically).
 
+## Release APK
+
+The project is configured to produce a **signed, installable release APK**:
+
+```bash
+./gradlew assembleRelease
+# -> app/build/outputs/apk/release/app-release.apk
+```
+
+Signing uses the committed demo keystore (`app/roadrash-release.jks`, store/key
+password `roadrash`, alias `roadrash`) so the release build works out of the box.
+For a real / Play Store release, supply your own keystore via gradle properties
+or environment variables (any subset overrides the defaults):
+
+```
+ROADRASH_STORE_FILE, ROADRASH_STORE_PASSWORD, ROADRASH_KEY_ALIAS, ROADRASH_KEY_PASSWORD
+```
+
+### CI build (`.github/workflows/release-apk.yml`)
+
+Because the Android Gradle Plugin and the SDK come from Google's servers, the
+APK is built in **GitHub Actions**, which has the SDK pre-installed and open
+network access. The workflow runs on pushes to the dev branch (and on manual
+dispatch), builds `assembleRelease`, and uploads the signed APK as a build
+artifact named **`roadrash-release-apk`** — download it from the workflow run's
+*Artifacts* section. Pushing a `v*` tag additionally publishes a GitHub Release
+with the APK attached.
+
 > **Note on CI / sandboxed builds:** the Android Gradle Plugin and AndroidX are
 > served from Google's Maven repository (`dl.google.com`). If your build
 > environment blocks that host the build cannot fetch AGP. The
